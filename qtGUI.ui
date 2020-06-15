@@ -208,7 +208,7 @@ QPushButton:hover
      <string notr="true">background:#D0D3D4 ;</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="historyPage">
      <widget class="QStackedWidget" name="stackedHistory">
@@ -224,7 +224,7 @@ QPushButton:hover
        <string notr="true">background:#D0D3D4;</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="productHistory">
        <widget class="QTableWidget" name="productHistoryTbl">
@@ -288,7 +288,7 @@ background:#D2D9F8;
        </widget>
       </widget>
       <widget class="QWidget" name="transHistory">
-       <widget class="QTableWidget" name="tansHistoryTbl">
+       <widget class="QTableWidget" name="transHistoryTbl">
         <property name="geometry">
          <rect>
           <x>30</x>

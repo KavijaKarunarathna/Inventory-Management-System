@@ -2,6 +2,7 @@ from interface import Ui_MainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import sqlite3
+import datetime
 
 class Database:
 
@@ -11,9 +12,9 @@ class Database:
 		
 	def create_table(self):
 		# creating tables if they do not exist
-		self.database.execute("CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY NOT NULL, description TEXT, price INTEGER NOT NULL, quantity INTEGER NOT NULL)")
-		self.database.execute("CREATE TABLE IF NOT EXISTS transhistory(id INTEGER PRIMARY KEY NOT NULL, quantity INTEGER, client TEXT, date TEXT)")
-		self.database.execute("CREATE TABLE IF NOT EXISTS stockhistory(id INTEGER PRIMARY KEY NOT NULL, quantity INTEGER, date TEXT)")
+		self.database.execute("CREATE TABLE IF NOT EXISTS products (id INTEGER NOT NULL, description TEXT, price INTEGER NOT NULL, quantity INTEGER NOT NULL)")
+		self.database.execute("CREATE TABLE IF NOT EXISTS transhistory(id INTEGER  NOT NULL, quantity INTEGER, client TEXT, date TEXT)")
+		self.database.execute("CREATE TABLE IF NOT EXISTS stockhistory(id INTEGER  NOT NULL, quantity INTEGER, date TEXT)")
 
 	def load_data(self, tablename: str):
 		if tablename == 'products':
@@ -28,6 +29,20 @@ class Database:
 			content = self.database.execute("SELECT * FROM stockhistory")
 			return content
 
+	def insert_data(self, event: str, content: list):
+		if event == "insertSales":
+			# update the products by reducing quantity
+
+			# update transHistoryTbl including the relevant transaction 
+
+			pass
+
+		if event == "insertProducts":
+			# update the products by increasing quantity
+
+			# update productsHistoryTable including the relevant information
+			pass
+	
 
 def main():
 	app = QtWidgets.QApplication(sys.argv)
@@ -38,6 +53,30 @@ def main():
 	# creating database
 	inventory = Database()
 
+	def insert_data_to_table(tableObj, tablename: str):
+		content = inventory.load_data(tablename)
+		tableObj.setRowCount(0)
+		for row_number,row_data in enumerate(content):
+			tableObj.insertRow(row_number)
+			for column_number, data in enumerate(row_data):
+				tableObj.setItem(row_number, column_number,QtWidgets.QTableWidgetItem(str(data)))
+
+	def updateStock():
+		date = datetime.datetime.now().strftime("%x")
+		id_ = ui.stockItemId.text()
+		quantity = ui.stockItemQuantity.text()
+		inventory.database.execute("INSERT INTO stockhistory VALUES(?, ?, ?)", (id_, quantity, date))
+		inQuan = inventory.database.execute("SELECT quantity FROM products WHERE id = ?",(id_,))
+		inQuan = int(inQuan) + int(quantity)
+		inventory.database.execute("UPDATE products SET quantity = ? WHERE id = ?",(inQuan, id_))
+		inventory.database.commit()
+
+	def addItem():
+		id_ = int(ui.newItemId.text())
+		price = int(ui.newItemPrice.text())
+		desc = ui.newItemDesc.text()
+		inventory.database.execute("INSERT INTO products VALUES(?, ?, ?, ?)", (id_, desc, price, 0))
+		inventory.database.commit()
 	# run functions relevant to particular page
 	def run_dash():
 		ui.stackedWidget.setCurrentIndex(3)
@@ -45,22 +84,23 @@ def main():
 
 	def run_items():
 		ui.stackedWidget.setCurrentIndex(1)
-		itemContent = inventory.load_data('products')
-		for row_number,row_data in enumerate(itemContent):
-			ui.productTbl.insertRow(row_number)
-			for column_number, data in enumerate(row_data):
-				ui.productTbl.setItem(row_number, column_number,QtWidgets.QTableWidgetItem(str(data)))
+		insert_data_to_table(ui.productTbl, 'products')
+		ui.stockItemUpdateBtn.clicked.connect(updateStock)
+		ui.newItemSaveBtn.clicked.connect(addItem)
 
 	def run_sales():
 		ui.stackedWidget.setCurrentIndex(2)
-		
 
 	def run_history():
 		ui.stackedWidget.setCurrentIndex(0)
-		
+		ui.transHistoryBtn.clicked.connect(lambda: ui.stackedHistory.setCurrentIndex(1))
+		ui.productHistoryBtn.clicked.connect(lambda: insert_data_to_table(ui.productHistoryTbl, 'stockhistory'))	
+		ui.productHistoryBtn.clicked.connect(lambda: insert_data_to_table(ui.transHistoryTbl, 'transhistory'))
 
 	# starting with the dashboard
 	ui.stackedWidget.setCurrentIndex(3)
+	insert_data_to_table(ui.productHistoryTbl, 'stockhistory')
+	run_history()
 	run_dash() 
 
 	# navbar button configuration
