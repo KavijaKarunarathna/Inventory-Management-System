@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'qtGUI.ui'
+#
+# Created by: PyQt5 UI code generator 5.14.2
+#
+# WARNING! All changes made in this file will be lost!
+
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
@@ -101,7 +110,7 @@ class Ui_MainWindow(object):
         self.companyLogo = QtWidgets.QLabel(self.frame)
         self.companyLogo.setGeometry(QtCore.QRect(0, 0, 201, 51))
         self.companyLogo.setText("")
-        self.companyLogo.setPixmap(QtGui.QPixmap("images/logo.PNG"))
+        self.companyLogo.setPixmap(QtGui.QPixmap("logo.PNG"))
         self.companyLogo.setScaledContents(True)
         self.companyLogo.setObjectName("companyLogo")
         self.stackedWidget = QtWidgets.QStackedWidget(self.centralwidget)
@@ -334,8 +343,16 @@ class Ui_MainWindow(object):
         self.productTbl.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.productTbl.setGridStyle(QtCore.Qt.SolidLine)
         self.productTbl.setRowCount(0)
-        self.productTbl.setColumnCount(3)
+        self.productTbl.setColumnCount(4)
         self.productTbl.setObjectName("productTbl")
+        item = QtWidgets.QTableWidgetItem()
+        self.productTbl.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.productTbl.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.productTbl.setHorizontalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.productTbl.setHorizontalHeaderItem(3, item)
         self.productTbl.horizontalHeader().setDefaultSectionSize(180)
         self.label_14 = QtWidgets.QLabel(self.itemsPage)
         self.label_14.setGeometry(QtCore.QRect(60, 470, 61, 51))
@@ -581,15 +598,15 @@ class Ui_MainWindow(object):
 "")
         self.label_5.setText("")
         self.label_5.setObjectName("label_5")
-        self.monthlySales_2 = QtWidgets.QLabel(self.dashPage)
-        self.monthlySales_2.setGeometry(QtCore.QRect(490, 350, 131, 81))
+        self.monthlyIncome = QtWidgets.QLabel(self.dashPage)
+        self.monthlyIncome.setGeometry(QtCore.QRect(490, 350, 131, 81))
         font = QtGui.QFont()
         font.setPointSize(28)
         font.setBold(True)
         font.setWeight(75)
-        self.monthlySales_2.setFont(font)
-        self.monthlySales_2.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.monthlySales_2.setStyleSheet("QLabel{\n"
+        self.monthlyIncome.setFont(font)
+        self.monthlyIncome.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.monthlyIncome.setStyleSheet("QLabel{\n"
 "border:0px solid #494B51;\n"
 "border-radius:10px;\n"
 "color:#268038;\n"
@@ -599,8 +616,8 @@ class Ui_MainWindow(object):
 "    color:#FFF;\n"
 "}\n"
 "")
-        self.monthlySales_2.setAlignment(QtCore.Qt.AlignCenter)
-        self.monthlySales_2.setObjectName("monthlySales_2")
+        self.monthlyIncome.setAlignment(QtCore.Qt.AlignCenter)
+        self.monthlyIncome.setObjectName("monthlyIncome")
         self.label_20 = QtWidgets.QLabel(self.dashPage)
         self.label_20.setGeometry(QtCore.QRect(440, 440, 211, 31))
         font = QtGui.QFont()
@@ -616,7 +633,7 @@ class Ui_MainWindow(object):
         self.stackedWidget.addWidget(self.dashPage)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 929, 26))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 929, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -626,7 +643,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(1)
         self.stackedHistory.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -661,6 +678,14 @@ class Ui_MainWindow(object):
         self.label_12.setText(_translate("MainWindow", "ITEM ID:"))
         self.label_13.setText(_translate("MainWindow", "QUANTITY:"))
         self.stockItemUpdateBtn.setText(_translate("MainWindow", "UPDATE"))
+        item = self.productTbl.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "ID"))
+        item = self.productTbl.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Description"))
+        item = self.productTbl.horizontalHeaderItem(2)
+        item.setText(_translate("MainWindow", "Quantity"))
+        item = self.productTbl.horizontalHeaderItem(3)
+        item.setText(_translate("MainWindow", "Price"))
         self.label_14.setText(_translate("MainWindow", "PRICE:"))
         self.label_15.setText(_translate("MainWindow", "Client Purchase"))
         self.savePurchaseBtn.setText(_translate("MainWindow", "SAVE"))
@@ -674,15 +699,15 @@ class Ui_MainWindow(object):
         self.label_7.setText(_translate("MainWindow", "OUT OF STOCK"))
         self.monthlySales.setText(_translate("MainWindow", "10"))
         self.label_19.setText(_translate("MainWindow", "MONTHLY SALES"))
-        self.monthlySales_2.setText(_translate("MainWindow", "10"))
+        self.monthlyIncome.setText(_translate("MainWindow", "10"))
         self.label_20.setText(_translate("MainWindow", "MONTHLY INCOME"))
 
 
-# if __name__ == "__main__":
-#     import sys
-#     app = QtWidgets.QApplication(sys.argv)
-#     MainWindow = QtWidgets.QMainWindow()
-#     ui = Ui_MainWindow()
-#     ui.setupUi(MainWindow)
-#     MainWindow.show()
-#     sys.exit(app.exec_())
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
