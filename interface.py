@@ -1,12 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'qtGUI.ui'
-#
-# Created by: PyQt5 UI code generator 5.14.2
-#
-# WARNING! All changes made in this file will be lost!
-
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
@@ -164,7 +155,7 @@ class Ui_MainWindow(object):
         self.transHistoryTbl.setGridStyle(QtCore.Qt.SolidLine)
         self.transHistoryTbl.setRowCount(0)
         self.transHistoryTbl.setColumnCount(4)
-        self.transHistoryTbl.setObjectName("tansHistoryTbl")
+        self.transHistoryTbl.setObjectName("transHistoryTbl")
         item = QtWidgets.QTableWidgetItem()
         self.transHistoryTbl.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -336,6 +327,9 @@ class Ui_MainWindow(object):
         self.stockItemUpdateBtn.setObjectName("stockItemUpdateBtn")
         self.productTbl = QtWidgets.QTableWidget(self.itemsPage)
         self.productTbl.setGeometry(QtCore.QRect(40, 10, 661, 271))
+        self.productTbl.setStyleSheet("border:3px solid #ABB0B5; \n"
+"background:#BEC5CD;\n"
+"")
         self.productTbl.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.productTbl.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.productTbl.setGridStyle(QtCore.Qt.SolidLine)
@@ -349,7 +343,6 @@ class Ui_MainWindow(object):
         item = QtWidgets.QTableWidgetItem()
         self.productTbl.setHorizontalHeaderItem(2, item)
         item = QtWidgets.QTableWidgetItem()
-        self.productTbl.setStyleSheet("'color:#B2BABB;borders")
         self.productTbl.setHorizontalHeaderItem(3, item)
         self.productTbl.horizontalHeader().setDefaultSectionSize(180)
         self.label_14 = QtWidgets.QLabel(self.itemsPage)
@@ -392,23 +385,21 @@ class Ui_MainWindow(object):
         self.savePurchaseBtn = QtWidgets.QPushButton(self.salesPage)
         self.savePurchaseBtn.setGeometry(QtCore.QRect(310, 380, 151, 61))
         font = QtGui.QFont()
-        font.setPointSize(15)
+        font.setPointSize(10)
         font.setBold(True)
-        font.setWeight(100)
+        font.setWeight(75)
         self.savePurchaseBtn.setFont(font)
         self.savePurchaseBtn.setStyleSheet("QPushButton{\n"
-"    border-radius:15px;\n"
+"     border-radius:15px;\n"
 "    background:#5D6D7E;\n"
 "    color:white;\n"
-"    transition-duration:200ms;\n"
-
+"     transition-duration:200ms;\n"
 "}\n"
 "\n"
 "QPushButton:hover\n"
 "{\n"
 "   background-color:#1695F3;\n"
 "    \n"
-
 "}")
         self.savePurchaseBtn.setObjectName("savePurchaseBtn")
         self.label_16 = QtWidgets.QLabel(self.salesPage)
@@ -644,7 +635,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.stackedWidget.setCurrentIndex(1)
-        self.stackedHistory.setCurrentIndex(0)
+        self.stackedHistory.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -683,9 +674,9 @@ class Ui_MainWindow(object):
         item = self.productTbl.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Description"))
         item = self.productTbl.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Quantity"))
-        item = self.productTbl.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Price"))
+        item = self.productTbl.horizontalHeaderItem(3)
+        item.setText(_translate("MainWindow", "Quantity"))
         self.label_14.setText(_translate("MainWindow", "PRICE:"))
         self.label_15.setText(_translate("MainWindow", "Client Purchase"))
         self.savePurchaseBtn.setText(_translate("MainWindow", "SAVE"))

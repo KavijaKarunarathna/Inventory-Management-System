@@ -52,6 +52,7 @@ def main():
 	
 	# creating database
 	inventory = Database()
+	cursor = inventory.database.cursor()
 
 	def insert_data_to_table(tableObj, tablename: str):
 		content = inventory.load_data(tablename)
@@ -63,13 +64,15 @@ def main():
 
 	def updateStock():
 		date = datetime.datetime.now().strftime("%x")
-		id_ = ui.stockItemId.text()
-		quantity = ui.stockItemQuantity.text()
+		id_ = int(ui.stockItemId.text())
+		quantity = int(ui.stockItemQuantity.text())
 		inventory.database.execute("INSERT INTO stockhistory VALUES(?, ?, ?)", (id_, quantity, date))
-		inQuan = inventory.database.execute("SELECT quantity FROM products WHERE id = ?",(id_,))
-		inQuan = int(inQuan) + int(quantity)
-		inventory.database.execute("UPDATE products SET quantity = ? WHERE id = ?",(inQuan, id_))
-		inventory.database.commit()
+		inQuan = cursor.execute("SELECT products.quantity FROM products WHERE products.id = ?",(id_,))
+		inQuantity = inQuan.fetchone()
+		inQuantity = inQuantity[0]
+		inQuantity += quantity
+		cursor.execute("UPDATE products SET quantity = ? WHERE id = ?",(inQuantity, id_))
+		cursor.connection.commit()
 
 	def addItem():
 		id_ = int(ui.newItemId.text())
@@ -90,6 +93,7 @@ def main():
 
 	def run_sales():
 		ui.stackedWidget.setCurrentIndex(2)
+		# ui.savePurchaseBtn(updateTrans)
 
 	def run_history():
 		ui.stackedWidget.setCurrentIndex(0)

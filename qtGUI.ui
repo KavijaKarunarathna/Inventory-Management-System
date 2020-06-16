@@ -208,7 +208,7 @@ QPushButton:hover
      <string notr="true">background:#D0D3D4 ;</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="historyPage">
      <widget class="QStackedWidget" name="stackedHistory">
@@ -736,12 +736,12 @@ background:#BEC5CD;
       </column>
       <column>
        <property name="text">
-        <string>Quantity</string>
+        <string>Price</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Price</string>
+        <string>Quantity</string>
        </property>
       </column>
      </widget>
