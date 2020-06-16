@@ -101,7 +101,7 @@ class Ui_MainWindow(object):
         self.companyLogo = QtWidgets.QLabel(self.frame)
         self.companyLogo.setGeometry(QtCore.QRect(0, 0, 201, 51))
         self.companyLogo.setText("")
-        self.companyLogo.setPixmap(QtGui.QPixmap("logo.PNG"))
+        self.companyLogo.setPixmap(QtGui.QPixmap("images/logo.PNG"))
         self.companyLogo.setScaledContents(True)
         self.companyLogo.setObjectName("companyLogo")
         self.stackedWidget = QtWidgets.QStackedWidget(self.centralwidget)
