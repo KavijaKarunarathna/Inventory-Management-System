@@ -17,31 +17,17 @@ class Database:
 		self.database.execute("CREATE TABLE IF NOT EXISTS stockhistory(id INTEGER  NOT NULL, quantity INTEGER, date TEXT)")
 
 	def load_data(self, tablename: str):
-		if tablename == 'products':
-			content = self.database.execute("SELECT * FROM products")
-			return content
 
-		if tablename == 'transhistory':
-			content = self.database.execute("SELECT * FROM transhistory")
-			return content
+		content = self.database.execute("SELECT * FROM "+tablename)
+		return content
 
-		if tablename == 'stockhistory':
-			content = self.database.execute("SELECT * FROM stockhistory")
-			return content
+		# if tablename == 'transhistory':
+		# 	content = self.database.execute("SELECT * FROM transhistory")
+		# 	return content
 
-	def insert_data(self, event: str, content: list):
-		if event == "insertSales":
-			# update the products by reducing quantity
-
-			# update transHistoryTbl including the relevant transaction 
-
-			pass
-
-		if event == "insertProducts":
-			# update the products by increasing quantity
-
-			# update productsHistoryTable including the relevant information
-			pass
+		# if tablename == 'stockhistory':
+		# 	content = self.database.execute("SELECT * FROM stockhistory")
+		# 	return content
 	
 
 def main():
@@ -78,8 +64,25 @@ def main():
 		id_ = int(ui.newItemId.text())
 		price = int(ui.newItemPrice.text())
 		desc = ui.newItemDesc.text()
-		inventory.database.execute("INSERT INTO products VALUES(?, ?, ?, ?)", (id_, desc, price, 0))
-		inventory.database.commit()
+		cursor.execute("INSERT INTO products VALUES(?, ?, ?, ?)", (id_, desc, price, 0))
+		cursor.connection.commit()
+
+
+	def updateTrans():
+		date = datetime.datetime.now().strftime("%x")
+		client = ui.clientName.text()
+		id_ =  int(ui.purchaseId.text())
+		quantity = int(ui.purchaseQuantity.text())
+		inventory.database.execute("INSERT INTO transhistory VALUES(?, ?, ?, ?)", (id_, quantity, client, date))
+		inQuan = cursor.execute("SELECT products.quantity FROM products WHERE products.id = ?",(id_,))
+		inQuantity = inQuan.fetchone()
+		inQuantity = inQuantity[0]
+		inQuantity -= quantity
+		cursor.execute("UPDATE products SET quantity = ? WHERE id = ?",(inQuantity, id_))
+		cursor.connection.commit()
+
+
+
 	# run functions relevant to particular page
 	def run_dash():
 		ui.stackedWidget.setCurrentIndex(3)
@@ -93,13 +96,22 @@ def main():
 
 	def run_sales():
 		ui.stackedWidget.setCurrentIndex(2)
-		# ui.savePurchaseBtn(updateTrans)
+		ui.savePurchaseBtn.clicked.connect(updateTrans)
 
 	def run_history():
+
+		def productHist():
+			ui.stackedHistory.setCurrentIndex(0)
+			insert_data_to_table(ui.productHistoryTbl, 'stockhistory')
+			
+		def transHist():
+			ui.stackedHistory.setCurrentIndex(1)
+			insert_data_to_table(ui.transHistoryTbl, 'transhistory')
+
 		ui.stackedWidget.setCurrentIndex(0)
-		ui.transHistoryBtn.clicked.connect(lambda: ui.stackedHistory.setCurrentIndex(1))
-		ui.productHistoryBtn.clicked.connect(lambda: insert_data_to_table(ui.productHistoryTbl, 'stockhistory'))	
-		ui.productHistoryBtn.clicked.connect(lambda: insert_data_to_table(ui.transHistoryTbl, 'transhistory'))
+		ui.stackedHistory.setCurrentIndex(0)
+		ui.productHistoryBtn.clicked.connect(productHist)
+		ui.transHistoryBtn.clicked.connect(transHist)
 
 	# starting with the dashboard
 	ui.stackedWidget.setCurrentIndex(3)
