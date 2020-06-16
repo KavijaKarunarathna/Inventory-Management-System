@@ -49,37 +49,46 @@ def main():
 				tableObj.setItem(row_number, column_number,QtWidgets.QTableWidgetItem(str(data)))
 
 	def updateStock():
-		date = datetime.datetime.now().strftime("%x")
-		id_ = int(ui.stockItemId.text())
-		quantity = int(ui.stockItemQuantity.text())
-		inventory.database.execute("INSERT INTO stockhistory VALUES(?, ?, ?)", (id_, quantity, date))
-		inQuan = cursor.execute("SELECT products.quantity FROM products WHERE products.id = ?",(id_,))
-		inQuantity = inQuan.fetchone()
-		inQuantity = inQuantity[0]
-		inQuantity += quantity
-		cursor.execute("UPDATE products SET quantity = ? WHERE id = ?",(inQuantity, id_))
-		cursor.connection.commit()
+		if ui.stockItemId.text().isnumeric():
+			date = datetime.datetime.now().strftime("%x")
+			id_ = int(ui.stockItemId.text())
+			quantity = int(ui.stockItemQuantity.text())
+			inventory.database.execute("INSERT INTO stockhistory VALUES(?, ?, ?)", (id_, quantity, date))
+			inQuan = cursor.execute("SELECT products.quantity FROM products WHERE products.id = ?",(id_,))
+			inQuantity = inQuan.fetchone()
+			inQuantity = inQuantity[0]
+			inQuantity += quantity
+			cursor.execute("UPDATE products SET quantity = ? WHERE id = ?",(inQuantity, id_))
+			ui.stockItemId.setText("")
+			ui.stockItemQuantity.setText("")
 
 	def addItem():
-		id_ = int(ui.newItemId.text())
-		price = int(ui.newItemPrice.text())
-		desc = ui.newItemDesc.text()
-		cursor.execute("INSERT INTO products VALUES(?, ?, ?, ?)", (id_, desc, price, 0))
-		cursor.connection.commit()
+		if ui.newItemId.text().isnumeric():
+			id_ = int(ui.newItemId.text())
+			price = int(ui.newItemPrice.text())
+			desc = ui.newItemDesc.text()
+			cursor.execute("INSERT INTO products VALUES(?, ?, ?, ?)", (id_, desc, price, 0))
+			ui.newItemId.setText("")
+			ui.newItemPrice.setText("")
+			ui.newItemDesc.setText("")
 
 
 	def updateTrans():
-		date = datetime.datetime.now().strftime("%x")
-		client = ui.clientName.text()
-		id_ =  int(ui.purchaseId.text())
-		quantity = int(ui.purchaseQuantity.text())
-		inventory.database.execute("INSERT INTO transhistory VALUES(?, ?, ?, ?)", (id_, quantity, client, date))
-		inQuan = cursor.execute("SELECT products.quantity FROM products WHERE products.id = ?",(id_,))
-		inQuantity = inQuan.fetchone()
-		inQuantity = inQuantity[0]
-		inQuantity -= quantity
-		cursor.execute("UPDATE products SET quantity = ? WHERE id = ?",(inQuantity, id_))
-		cursor.connection.commit()
+		if ui.purchaseId.text().isnumeric():
+			date = datetime.datetime.now().strftime("%x")
+			client = ui.clientName.text()
+			id_ =  int(ui.purchaseId.text())
+			quantity = int(ui.purchaseQuantity.text())
+			inventory.database.execute("INSERT INTO transhistory VALUES(?, ?, ?, ?)", (id_, quantity, client, date))
+			inQuan = cursor.execute("SELECT products.quantity FROM products WHERE products.id = ?",(id_,))
+			inQuantity = inQuan.fetchone()
+			inQuantity = inQuantity[0]
+			inQuantity -= quantity
+			cursor.execute("UPDATE products SET quantity = ? WHERE id = ?",(inQuantity, id_))
+			cursor.connection.commit()
+			ui.clientName.setText("")
+			ui.purchaseId.setText("")
+			ui.purchaseQuantity.setText("")
 
 
 
@@ -93,6 +102,7 @@ def main():
 		insert_data_to_table(ui.productTbl, 'products')
 		ui.stockItemUpdateBtn.clicked.connect(updateStock)
 		ui.newItemSaveBtn.clicked.connect(addItem)
+		cursor.connection.commit()
 
 	def run_sales():
 		ui.stackedWidget.setCurrentIndex(2)
@@ -109,7 +119,7 @@ def main():
 			insert_data_to_table(ui.transHistoryTbl, 'transhistory')
 
 		ui.stackedWidget.setCurrentIndex(0)
-		ui.stackedHistory.setCurrentIndex(0)
+		productHist()
 		ui.productHistoryBtn.clicked.connect(productHist)
 		ui.transHistoryBtn.clicked.connect(transHist)
 
@@ -128,5 +138,6 @@ def main():
 
 	MainWindow.show()
 	sys.exit(app.exec_())
+	inventory.database.close()
 
 main()
