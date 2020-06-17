@@ -14,8 +14,8 @@ class Database:
 	def create_table(self):
 		# creating tables if they do not exist
 		self.database.execute("CREATE TABLE IF NOT EXISTS products (id INTEGER NOT NULL, description TEXT, price INTEGER NOT NULL, quantity INTEGER NOT NULL)")
-		self.database.execute("CREATE TABLE IF NOT EXISTS transhistory(id INTEGER  NOT NULL, quantity INTEGER, client TEXT, date TEXT)")
-		self.database.execute("CREATE TABLE IF NOT EXISTS stockhistory(id INTEGER  NOT NULL, quantity INTEGER, date TEXT)")
+		self.database.execute("CREATE TABLE IF NOT EXISTS transhistory(id INTEGER NOT NULL, quantity INTEGER, client TEXT, date TEXT)")
+		self.database.execute("CREATE TABLE IF NOT EXISTS stockhistory(id INTEGER NOT NULL, quantity INTEGER, date TEXT)")
 
 	def load_data(self, tablename: str):
 
@@ -33,11 +33,11 @@ def main():
 	inventory = Database()
 	cursor = inventory.database.cursor()
 
-	def show_message(text):
+	def show_message(text, type):
 		msg = QMessageBox()
 		msg.setWindowTitle("Inventory Manager")
 		msg.setText("     "+text+"     ")
-		msg.setIcon(QMessageBox.Warning)
+		msg.setIcon(type)
 		x = msg.exec_()
 
 	def insert_data_to_table(tableObj, tablename: str):
@@ -64,65 +64,91 @@ def main():
 				ui.stockItemQuantity.setText("")
 		except (ValueError, TypeError):
 			show_message("Item ID is not registered.")
+		run_items()
+
 
 	def addItem():
-		itemCursor= cursor.execute("SELECT products.id from products").fetchall()
-		id_ = int(ui.newItemId.text())
 		try:
+			id_ = int(ui.newItemId.text())
 			price = int(ui.newItemPrice.text())
+			itemCursor= cursor.execute("SELECT products.id from products").fetchall()
+			desc = ui.newItemDesc.text()
+			item_list = []
+			for item in itemCursor:
+				item_list.append(item[0])
+			if id_ not in item_list:
+				if ui.newItemId.text().isnumeric():	
+					try:				
+						cursor.execute("INSERT INTO products VALUES(?, ?, ?, ?)", (id_, desc, price, 0))
+						ui.newItemId.setText("")
+						ui.newItemPrice.setText("")
+						ui.newItemDesc.setText("")
+						show_message("Item successfully added!",QMessageBox.Information)
+						run_items()
+					except ValueError:
+						show_message("Price cannot be empty.", QMessageBox.Warning)
+			else:
+				show_message("The Item ID already exists.")
+				ui.newItemId.setText("")
+				ui.newItemPrice.setText("")
+				ui.newItemDesc.setText("")
+				run_items()
 		except ValueError:
-			show_message("Price is numeric and cannot be empty.")
-			return
-		desc = ui.newItemDesc.text()
-		item_list = []
-		for item in itemCursor:
-			item_list.append(item[0])
-		if id_ not in item_list:
-			if ui.newItemId.text().isnumeric():	
-				try:				
-					cursor.execute("INSERT INTO products VALUES(?, ?, ?, ?)", (id_, desc, price, 0))
-					ui.newItemId.setText("")
-					ui.newItemPrice.setText("")
-					ui.newItemDesc.setText("")
-				except ValueError:
-					show_message("Price cannot be empty.")
+			pass
 
-		else:
-			show_message("The Item ID already exists.")
-
-
+			
 	def updateTrans():
 		date = datetime.datetime.now().strftime("%x")
 		client = ui.clientName.text()
+
 		try:
 			id_ =  int(ui.purchaseId.text())
 			quantity = int(ui.purchaseQuantity.text())
 		except ValueError:
-			show_message("Item ID and quantity must be numeric.")
-			return
-		itemCursor= cursor.execute("SELECT products.id from products").fetchall()
-		item_list = []
-		for item in itemCursor:
-			item_list.append(item[0])
-		if id_ in item_list:
-			inventory.database.execute("INSERT INTO transhistory VALUES(?, ?, ?, ?)", (id_, quantity, client, date))
-			inQuan = cursor.execute("SELECT products.quantity FROM products WHERE products.id = ?",(id_,))
-			inQuantity = inQuan.fetchone()
-			inQuantity = inQuantity[0]
-			inQuantity -= quantity
-			cursor.execute("UPDATE products SET quantity = ? WHERE id = ?",(inQuantity, id_))
-			cursor.connection.commit()
+			show_message("Item ID and quantity must be numeric.", QMessageBox.Warning)
 		else:
-			show_message("Item is not registered")
+			itemCursor= cursor.execute("SELECT products.id from products").fetchall()
+			item_list = []
+			for item in itemCursor:
+				item_list.append(item[0])
+			if id_ in item_list:
+				inventory.database.execute("INSERT INTO transhistory VALUES(?, ?, ?, ?)", (id_, quantity, client, date))
+				inQuan = cursor.execute("SELECT products.quantity FROM products WHERE products.id = ?",(id_,))
+				inQuantity = inQuan.fetchone()
+				inQuantity = inQuantity[0]
+				inQuantity -= quantity
+				cursor.execute("UPDATE products SET quantity = ? WHERE id = ?",(inQuantity, id_))
+				cursor.connection.commit()
+				show_message("Transaction successful.", QMessageBox.Information)
+			else:
+				show_message("Item is not registered", QMessageBox.Warning)
+
 		ui.clientName.setText("")
 		ui.purchaseId.setText("")
 		ui.purchaseQuantity.setText("")
+		return
 
-
+	def updateDashView():
+		noOfItems = cursor.execute("SELECT COUNT(*) FROM products").fetchone()
+		ui.numberOfItems.setText(str(noOfItems[0]))
+		outOfStock = cursor.execute("SELECT COUNT(*) FROM products WHERE products.quantity < 1").fetchone()
+		ui.numberOfOutStock.setText(str(outOfStock[0]))
+		numberOfSales = cursor.execute("SELECT COUNT(*) FROM transhistory").fetchone()
+		ui.monthlySales.setText(str(numberOfSales[0]))
+		QuantityAndPrice = cursor.execute("SELECT transhistory.id, transhistory.quantity FROM transhistory")
+		Ids = []
+		for row in QuantityAndPrice:
+			Ids.append((row[0], row[1]))
+		monthlyIncome = 0
+		for row in Ids:
+			price = cursor.execute("SELECT price FROM products WHERE id = ?",(row[0],)).fetchone()
+			monthlyIncome += price[0] * row[1]
+		ui.monthlyIncome.setText("Rs "+str(monthlyIncome))
 
 	# run functions relevant to particular page
 	def run_dash():
 		ui.stackedWidget.setCurrentIndex(3)
+		updateDashView()
 		
 
 	def run_items():
