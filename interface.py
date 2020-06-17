@@ -119,7 +119,10 @@ class Ui_MainWindow(object):
         self.productHistoryTbl = QtWidgets.QTableWidget(self.productHistory)
         self.productHistoryTbl.setGeometry(QtCore.QRect(30, 20, 551, 411))
         font = QtGui.QFont()
+        font.setFamily("Helvetica")
         font.setPointSize(11)
+        font.setBold(True)
+        font.setWeight(65)
         self.productHistoryTbl.setFont(font)
         self.productHistoryTbl.setStyleSheet("border:3px solid rgba(103,103,103,0.4); \n"
 "background:#D2D9F8;\n"
@@ -145,7 +148,10 @@ class Ui_MainWindow(object):
         self.transHistoryTbl = QtWidgets.QTableWidget(self.transHistory)
         self.transHistoryTbl.setGeometry(QtCore.QRect(30, 20, 551, 411))
         font = QtGui.QFont()
-        font.setPointSize(11)
+        font.setFamily("Helvetica")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(65)
         self.transHistoryTbl.setFont(font)
         self.transHistoryTbl.setStyleSheet("border:3px solid rgba(103,103,103,0.4); \n"
 "background:#D2D9F8;\n"
@@ -170,7 +176,7 @@ class Ui_MainWindow(object):
         self.productHistoryBtn.setGeometry(QtCore.QRect(0, 0, 181, 51))
         font = QtGui.QFont()
         font.setFamily("Verdana")
-        font.setPointSize(12)
+        font.setPointSize(11)
         font.setBold(True)
         font.setWeight(75)
         self.productHistoryBtn.setFont(font)
@@ -331,6 +337,12 @@ class Ui_MainWindow(object):
 "background:#BEC5CD;\n"
 "")
         self.productTbl.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        font = QtGui.QFont()
+        font.setFamily("Helvetica")
+        font.setPointSize(11)
+        font.setBold(True)
+        font.setWeight(65)
+        self.productTbl.setFont(font)
         self.productTbl.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.productTbl.setGridStyle(QtCore.Qt.SolidLine)
         self.productTbl.setRowCount(0)
