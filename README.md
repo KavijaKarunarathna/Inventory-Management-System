@@ -7,7 +7,7 @@ Building an inventory management software for a local business.
 ![alt text](https://i.ibb.co/V38VHMB/1.png)
 
 
-https://i.ibb.co/R0J76Y0/2.png
+![alt text](https://i.ibb.co/R0J76Y0/2.png)
 
 
-https://i.ibb.co/pZn4GmZ/3.png
+![alt text](https://i.ibb.co/pZn4GmZ/3.png)
