@@ -4,7 +4,7 @@ Building an inventory management software for a local business.
   This business is currently using books to store their data. This would be a really good update.
   GUI is built with PyQt. Coded in Python.
 
-https://i.ibb.co/V38VHMB/1.png
+![alt text](https://i.ibb.co/V38VHMB/1.png)
 
 
 https://i.ibb.co/R0J76Y0/2.png
